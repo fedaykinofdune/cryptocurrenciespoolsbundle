@@ -1,0 +1,17 @@
+{
+    "name": "kujaff/cryptocurrenciespoolsbundle",
+    "license": "MIT",
+    "type": "bundle",
+    "description": "Informations about crypto currencies pools (MPOS)",
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": { "kujaff\\CryptoCurrenciesPoolsBundle\\": "" }
+    },
+    "target-dir": "kujaff/CryptoCurrenciesPoolsBundle",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/kujaff/cryptocurrenciespoolsbundle.git"
+        }
+    ]
+}
