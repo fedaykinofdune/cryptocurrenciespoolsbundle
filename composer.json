@@ -4,6 +4,10 @@
     "type": "bundle",
     "description": "Informations about crypto currencies pools (MPOS)",
     "minimum-stability": "dev",
+    "require": {
+      "kujaff/versionsbundle": "dev-master",
+      "kujaff/cryptocurrenciesbundle": "dev-master"
+    },
     "autoload": {
         "psr-0": { "kujaff\\CryptoCurrenciesPoolsBundle\\": "" }
     },
