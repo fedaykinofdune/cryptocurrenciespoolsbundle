@@ -1,4 +1,4 @@
-cryptocurrenciespools
+CryptoCurrenciesPoolsBundle
 =====================
 
-Informations about crypto currencies pools
+Informations about crypto currencies pools (MPOS)
