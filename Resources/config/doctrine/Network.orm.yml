@@ -1,0 +1,45 @@
+kujaff\CryptoCurrenciesPoolsBundle\Entity\Network:
+    type: entity
+    table: pools_network
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        hashrate:
+            type: integer
+            nullable: true
+        estimatedTime:
+            type: integer
+            nullable: true
+        nextDifficulty:
+            type: decimal
+            precision: 15
+            scale: 10
+            nullable: true
+        blocksUntilDiffChange:
+            type: integer
+            nullable: true
+        difficulty:
+            type: decimal
+            precision: 15
+            scale: 10
+            nullable: true
+        currentBlock:
+            type: integer
+            nullable: true
+        lastBlock:
+            type: integer
+            nullable: true
+        nextBlock:
+            type: integer
+            nullable: true
+            
+    oneToOne:
+        pool:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
+            fetch: EAGER
+                
+    lifecycleCallbacks: {  }

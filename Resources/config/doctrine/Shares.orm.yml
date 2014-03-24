@@ -1,0 +1,28 @@
+kujaff\CryptoCurrenciesPoolsBundle\Entity\Shares:
+    type: entity
+    table: pools_shares
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        round:
+            type: integer
+            nullable: true
+        rate:
+            type: decimal
+            precision: 2
+            scale: 2
+            nullable: true
+        estimated:
+            type: integer
+            nullable: true
+
+    oneToOne:
+        pool:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
+            fetch: EAGER
+            
+    lifecycleCallbacks: {  }

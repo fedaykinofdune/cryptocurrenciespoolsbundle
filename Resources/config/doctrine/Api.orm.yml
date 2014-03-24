@@ -1,0 +1,33 @@
+kujaff\CryptoCurrenciesPoolsBundle\Entity\Api:
+    type: entity
+    table: pools_apis
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        kind:
+            type: smallint
+            options:
+                unsigned: true
+        accessKey:
+            type: string
+            length: 255
+            nullable: true
+        login:
+            type: string
+            length: 50
+            nullable: true
+        password:
+            type: string
+            length: 100
+            nullable: true
+
+    oneToOne:
+        pool:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
+            fetch: EAGER
+
+    lifecycleCallbacks: {  }

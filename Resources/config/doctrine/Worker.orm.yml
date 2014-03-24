@@ -1,0 +1,35 @@
+kujaff\CryptoCurrenciesPoolsBundle\Entity\Worker:
+    type: entity
+    table: pools_users_workers
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: '50'
+        password:
+            type: string
+            length: '100'
+        monitor:
+            type: boolean
+            nullable: true
+        hashrate:
+            type: integer
+            nullable: true
+        difficulty:
+            type: decimal
+            precision: 15
+            scale: 10
+            nullable: true
+
+    manyToOne:
+        user:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\User
+            inversedBy: workers
+            fetch: EAGER
+                
+    lifecycleCallbacks: {  }

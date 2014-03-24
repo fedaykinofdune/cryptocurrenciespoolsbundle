@@ -1,0 +1,60 @@
+kujaff\CryptoCurrenciesPoolsBundle\Entity\User:
+    type: entity
+    table: pools_users
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        balanceConfirmed:
+            type: decimal
+            precision: 20
+            scale: 10
+            nullable: true
+        balanceUnconfirmed:
+            type: decimal
+            precision: 20
+            scale: 10
+            nullable: true
+        balanceOrphaned:
+            type: decimal
+            precision: 20
+            scale: 10
+            nullable: true
+        hashrate:
+            type: integer
+            nullable: true
+        shareRate:
+            type: decimal
+            precision: 2
+            scale: 2
+            nullable: true
+        validShares:
+            type: integer
+            nullable: true
+        invalidShares:
+            type: integer
+            nullable: true
+        donate:
+            type: decimal
+            precision: 2
+            scale: 2
+            nullable: true
+        isAnonymous:
+            type: boolean
+            nullable: true
+
+    oneToOne:
+        pool:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
+            fetch: EAGER
+            
+    oneToMany:
+        workers:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Worker
+            mappedBy: worker
+            fetch: EAGER
+
+    lifecycleCallbacks: {  }

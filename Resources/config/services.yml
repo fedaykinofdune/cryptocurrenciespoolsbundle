@@ -1,0 +1,12 @@
+services:
+    
+    cryptocurrenciespools.installer:
+        class: kujaff\CryptoCurrenciesPoolsBundle\Install\Installer
+        arguments: [ @service_container ]
+        tags:
+            - { name: bundle.install }
+            - { name: bundle.uninstall }
+
+    cryptocurrenciespools:
+        class: kujaff\CryptoCurrenciesPoolsBundle\Pools\Service
+        arguments: [ @service_container ]

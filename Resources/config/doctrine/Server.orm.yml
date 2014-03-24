@@ -1,0 +1,23 @@
+kujaff\CryptoCurrenciesPoolsBundle\Entity\Server:
+    type: entity
+    table: pools_servers
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        address:
+            type: string
+            length: 255
+        port:
+            type: integer
+            
+    manyToOne:
+        pool:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
+            inversedBy: servers
+            fetch: EAGER
+
+    lifecycleCallbacks: {  }

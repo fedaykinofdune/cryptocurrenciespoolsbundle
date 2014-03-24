@@ -1,0 +1,32 @@
+kujaff\CryptoCurrenciesPoolsBundle\Entity\Blocks:
+    type: entity
+    table: pools_blocks
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        last:
+            type: integer
+            nullable: true
+        currentBlockHeight:
+            type: integer
+            nullable: true
+        estimatedTime:
+            type: integer
+            nullable: true
+        progress:
+            type: smallint
+            nullable: true
+        timeSinceLast:
+            type: integer
+            nullable: true
+            
+    oneToOne:
+        pool:
+            targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
+            fetch: EAGER
+
+    lifecycleCallbacks: {  }
