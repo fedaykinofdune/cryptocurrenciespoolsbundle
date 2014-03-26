@@ -27,8 +27,32 @@ class MPOS implements Api
 		$ch = curl_init($address);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$json = curl_exec($ch);
+
+		$return = array(
+			'data' => json_decode($json, true),
+			'errors' => array()
+		);
+
+		if ($json == 'Access denied') {
+			$return['errors'][] = 'Vérifiez votre clef d\'API.';
+		} else if ($json == '400 Bad Request') {
+			$return['errors'][] = 'Action "' . $action . '" non reconnue.';
+		}
+
 		curl_close($ch);
-		return json_decode($json, true);
+		return $return;
+	}
+
+	/**
+	 * Indicate if MPOS Api version is 1.0.0
+	 *
+	 * @param array $data
+	 * @param string $action
+	 * @return boolean
+	 */
+	private function _isV1($data, $action)
+	{
+		return (array_key_exists($action, $data) && array_key_exists('version', $data[$action]) && $data[$action]['version'] == '1.0.0');
 	}
 
 	/**
@@ -68,8 +92,41 @@ class MPOS implements Api
 	 */
 	public function refreshUser(Pool $pool)
 	{
-		$data = $this->_call($pool, 'getuserstatus');
-		d($data);
+		$user = $pool->getUser();
+
+		$call = $this->_call($pool, 'getuserstatus');
+		if (count($call['errors']) > 0) {
+			return $call['errors'];
+		}
+		$data = $call['data'];
+
+		if ($this->_isV1($data, 'getuserstatus')) {
+			$finalData = $data['getuserstatus']['data'];
+			$user->setHashrate($finalData['hashrate'] * 1000);
+			$user->setShareRate($finalData['sharerate']);
+			$user->setValidShares($finalData['shares']['valid']);
+			$user->setInvalidShares($finalData['shares']['invalid']);
+
+			$call = $this->_call($pool, 'getuserbalance');
+			if (count($call['errors']) > 0) {
+				return $call['errors'];
+			}
+			$data = $call['data'];
+
+			if ($this->_isV1($data, 'getuserbalance')) {
+				$finalData = $data['getuserbalance']['data'];
+				$user->setBalanceConfirmed($finalData['confirmed']);
+				$user->setBalanceUnconfirmed($finalData['unconfirmed']);
+				$user->setBalanceOrphaned($finalData['orphaned']);
+			}
+		} else {
+			$finalData = $data['getuserstatus'];
+			$user->setHashrate($finalData['hashrate'] * 1000);
+			$user->setShareRate($finalData['sharerate']);
+			$user->setBalanceConfirmed($finalData['balance']);
+		}
+
+		$user->setLastUpdate(new \DateTime());
 	}
 
 	/**

@@ -45,16 +45,23 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\User:
         isAnonymous:
             type: boolean
             nullable: true
+        lastUpdate:
+            type: datetime
+            nullable: true
 
     oneToOne:
         pool:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
             fetch: EAGER
+            cascade:
+                - persist
             
     oneToMany:
         workers:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Worker
-            mappedBy: worker
+            mappedBy: user
             fetch: EAGER
+            cascade:
+                - persist
 
     lifecycleCallbacks: {  }

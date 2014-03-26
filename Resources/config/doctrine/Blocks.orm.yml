@@ -23,6 +23,9 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Blocks:
         timeSinceLast:
             type: integer
             nullable: true
+        lastUpdate:
+            type: datetime
+            nullable: true
             
     oneToOne:
         pool:

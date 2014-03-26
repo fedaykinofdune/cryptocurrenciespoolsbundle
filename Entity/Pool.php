@@ -1,6 +1,8 @@
 <?php
 namespace kujaff\CryptoCurrenciesPoolsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Pool
  */
@@ -30,11 +32,6 @@ class Pool
 	 * @var string
 	 */
 	private $efficiency;
-
-	/**
-	 * @var integer
-	 */
-	private $estimatedTime;
 
 	/**
 	 * @var string
@@ -75,6 +72,29 @@ class Pool
 	 * @var User
 	 */
 	private $user;
+
+	/**
+	 * @var \DateTime
+	 */
+	private $lastUpdate;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->api = new Api();
+		$this->api->setPool($this);
+		$this->blocks = new Blocks();
+		$this->blocks->setPool($this);
+		$this->network = new Network();
+		$this->network->setPool($this);
+		$this->servers = new ArrayCollection();
+		$this->shares = new Shares();
+		$this->shares->setPool($this);
+		$this->user = new User();
+		$this->user->setPool($this);
+	}
 
 	/**
 	 * Get id
@@ -230,7 +250,7 @@ class Pool
 	 * @param int$count
 	 * @return Pool
 	 */
-	public function setWorkerCount($count)
+	public function setWorkersCount($count)
 	{
 		$this->workersCount = $count;
 		return $this;
@@ -241,7 +261,7 @@ class Pool
 	 *
 	 * @return int
 	 */
-	public function getWorkerCount()
+	public function getWorkersCount()
 	{
 		return $this->workersCount;
 	}
@@ -276,6 +296,16 @@ class Pool
 	public function removeServer(Server $server)
 	{
 		$this->servers->removeElement($server);
+	}
+
+	/**
+	 * Count servers
+	 *
+	 * @return int
+	 */
+	public function countServers()
+	{
+		return count($this->servers);
 	}
 
 	/**
@@ -386,6 +416,36 @@ class Pool
 	public function getUser()
 	{
 		return $this->user;
+	}
+
+	/**
+	 * Define last update
+	 *
+	 * @param \DateTime $lastUpdate
+	 */
+	public function setLastUpdate($lastUpdate)
+	{
+		$this->lastUpdate = $lastUpdate;
+	}
+
+	/**
+	 * Get last update
+	 *
+	 * @return \DateTime
+	 */
+	public function getLastUpdate()
+	{
+		return $this->lastUpdate;
+	}
+
+	/**
+	 * Indicate if data needs update
+	 *
+	 * @return boolean
+	 */
+	public function needUpdate()
+	{
+		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 1 * 60);
 	}
 
 }

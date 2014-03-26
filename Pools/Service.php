@@ -34,6 +34,14 @@ class Service
 	}
 
 	/**
+	 * Save pool
+	 */
+	private function _save()
+	{
+		$this->container->get('doctrine')->getManager()->flush();
+	}
+
+	/**
 	 * Constructor
 	 *
 	 * @param ContainerInterface $container
@@ -44,12 +52,45 @@ class Service
 	}
 
 	/**
+	 * Get a pool
+	 *
+	 * @param int $id
+	 * @return Pool
+	 * @throws \Exception
+	 */
+	public function get($id)
+	{
+		$return = $this->container->get('doctrine')->getRepository('CryptoCurrenciesPoolsBundle:Pool')->findOneById($id);
+		if ($return == null) {
+			throw new \Exception('Pool "' . $id . '" not found.');
+		}
+		$this->refresh($return);
+		return $return;
+	}
+
+	/**
+	 * Get all pools
+	 *
+	 * @return Pool[]
+	 */
+	public function getAll()
+	{
+		$return = $this->container->get('doctrine')->getRepository('CryptoCurrenciesPoolsBundle:Pool')->findBy(array(), array('name' => 'ASC'));
+		foreach ($return as $pool) {
+			//$this->refresh($pool);
+		}
+		return $return;
+	}
+
+	/**
 	 * Refresh all data
 	 *
 	 * @param Pool $pool
+	 * @param boolean $force
 	 */
-	public function refresh(Pool $pool)
+	public function refresh(Pool $pool, $force = false)
 	{
+		$this->refreshPool($pool);
 		$this->refreshBlocks($pool);
 		$this->refreshNetwork($pool);
 		$this->refreshShares($pool);
@@ -58,11 +99,23 @@ class Service
 	}
 
 	/**
+	 * Refresh pool data
+	 *
+	 * @param Pool $pool
+	 * @param boolean $force
+	 */
+	public function refreshPool(Pool $pool, $force = false)
+	{
+
+	}
+
+	/**
 	 * Refresh blocks data
 	 *
 	 * @param Pool $pool
+	 * @param boolean $force
 	 */
-	public function refreshBlocks(Pool $pool)
+	public function refreshBlocks(Pool $pool, $force = false)
 	{
 
 	}
@@ -71,8 +124,9 @@ class Service
 	 * Refresh network data
 	 *
 	 * @param Pool $pool
+	 * @param boolean $force
 	 */
-	public function refreshNetwork(Pool $pool)
+	public function refreshNetwork(Pool $pool, $force = false)
 	{
 
 	}
@@ -81,8 +135,9 @@ class Service
 	 * Refresh shares data
 	 *
 	 * @param Pool $pool
+	 * @param boolean $force
 	 */
-	public function refreshShares(Pool $pool)
+	public function refreshShares(Pool $pool, $force = false)
 	{
 
 	}
@@ -91,18 +146,23 @@ class Service
 	 * Refresh user data
 	 *
 	 * @param Pool $pool
+	 * @param boolean $force
 	 */
-	public function refreshUser(Pool $pool)
+	public function refreshUser(Pool $pool, $force = false)
 	{
-		$this->_getAPI($pool)->refreshUser($pool);
+		if ($force || $pool->getUser()->needUpdate()) {
+			$this->_getAPI($pool)->refreshUser($pool);
+			$this->_save();
+		}
 	}
 
 	/**
 	 * Refresh user workers data
 	 *
 	 * @param Pool $pool
+	 * @param boolean $force
 	 */
-	public function refreshUserWorkers(Pool $pool)
+	public function refreshUserWorkers(Pool $pool, $force = false)
 	{
 
 	}

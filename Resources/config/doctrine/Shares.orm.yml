@@ -19,6 +19,9 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Shares:
         estimated:
             type: integer
             nullable: true
+        lastUpdate:
+            type: datetime
+            nullable: true
 
     oneToOne:
         pool:

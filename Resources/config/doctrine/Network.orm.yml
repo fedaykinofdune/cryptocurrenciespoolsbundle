@@ -36,6 +36,9 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Network:
         nextBlock:
             type: integer
             nullable: true
+        lastUpdate:
+            type: datetime
+            nullable: true
             
     oneToOne:
         pool:

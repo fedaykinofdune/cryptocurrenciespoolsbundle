@@ -42,6 +42,11 @@ class Worker
 	private $user;
 
 	/**
+	 * @var \DateTime
+	 */
+	private $lastUpdate;
+
+	/**
 	 * Get id
 	 *
 	 * @return integer
@@ -186,6 +191,46 @@ class Worker
 	public function getUser()
 	{
 		return $this->user;
+	}
+
+	/**
+	 * Define last update
+	 *
+	 * @param \DateTime $lastUpdate
+	 */
+	public function setLastUpdate($lastUpdate)
+	{
+		$this->lastUpdate = $lastUpdate;
+	}
+
+	/**
+	 * Get last update
+	 *
+	 * @return \DateTime
+	 */
+	public function getLastUpdate()
+	{
+		return $this->lastUpdate;
+	}
+
+	/**
+	 * Indicate if data needs update
+	 *
+	 * @return boolean
+	 */
+	public function needUpdate()
+	{
+		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 1 * 60);
+	}
+
+	/**
+	 * Indicate if worker is enabled
+	 *
+	 * @return boolean
+	 */
+	public function getEnabled()
+	{
+		return ($this->getHashrate() > 0);
 	}
 
 }

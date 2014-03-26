@@ -25,6 +25,9 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Worker:
             precision: 15
             scale: 10
             nullable: true
+        lastUpdate:
+            type: datetime
+            nullable: true
 
     manyToOne:
         user:

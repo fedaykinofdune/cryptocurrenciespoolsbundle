@@ -57,6 +57,11 @@ class Network
 	private $pool;
 
 	/**
+	 * @var \DateTime
+	 */
+	private $lastUpdate;
+
+	/**
 	 * Get id
 	 *
 	 * @return integer
@@ -270,6 +275,36 @@ class Network
 	public function getPool()
 	{
 		return $this->pool;
+	}
+
+	/**
+	 * Define last update
+	 *
+	 * @param \DateTime $lastUpdate
+	 */
+	public function setLastUpdate($lastUpdate)
+	{
+		$this->lastUpdate = $lastUpdate;
+	}
+
+	/**
+	 * Get last update
+	 *
+	 * @return \DateTime
+	 */
+	public function getLastUpdate()
+	{
+		return $this->lastUpdate;
+	}
+
+	/**
+	 * Indicate if data needs update
+	 *
+	 * @return boolean
+	 */
+	public function needUpdate()
+	{
+		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 5 * 60);
 	}
 
 }

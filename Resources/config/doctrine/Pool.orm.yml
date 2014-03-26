@@ -22,13 +22,13 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool:
             precision: 2
             scale: 2
             nullable: true
-        estimatedTime:
-            type: integer
-            nullable: true
         taxeFee:
             type: decimal
             precision: 2
             scale: 2
+            nullable: true
+        lastUpdate:
+            type: datetime
             nullable: true
             
     oneToMany:
@@ -41,17 +41,31 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool:
         api:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Api
             fetch: EAGER
+            cascade:
+                - persist
+                
         blocks:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Blocks
             fetch: EAGER
+            cascade:
+                - persist
+                
         network:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Network
             fetch: EAGER
+            cascade:
+                - persist
+                
         shares:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Shares
             fetch: EAGER
+            cascade:
+                - persist
+                
         user:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\User
             fetch: EAGER
+            cascade:
+                - persist
             
     lifecycleCallbacks: {  }

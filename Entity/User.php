@@ -1,6 +1,8 @@
 <?php
 namespace kujaff\CryptoCurrenciesPoolsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * User
  */
@@ -65,6 +67,19 @@ class User
 	 * @var Worker[]
 	 */
 	private $workers;
+
+	/**
+	 * @var \DateTime
+	 */
+	private $lastUpdate;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->workers = new ArrayCollection();
+	}
 
 	/**
 	 * Get id
@@ -328,6 +343,32 @@ class User
 	}
 
 	/**
+	 * Count workers
+	 *
+	 * @return int
+	 */
+	public function countWorkers()
+	{
+		return count($this->getWorkers());
+	}
+
+	/**
+	 * Count enabled workers
+	 *
+	 * @return int
+	 */
+	public function countEnabledWorkers()
+	{
+		$return = 0;
+		foreach ($this->getWorkers() as $worker) {
+			if ($worker->getEnabled()) {
+				$return++;
+			}
+		}
+		return $return;
+	}
+
+	/**
 	 * Remove worker
 	 *
 	 * @param Worker $worker
@@ -335,6 +376,36 @@ class User
 	public function removeServer(Worker $worker)
 	{
 		$this->workers->removeElement($worker);
+	}
+
+	/**
+	 * Define last update
+	 *
+	 * @param \DateTime $lastUpdate
+	 */
+	public function setLastUpdate($lastUpdate)
+	{
+		$this->lastUpdate = $lastUpdate;
+	}
+
+	/**
+	 * Get last update
+	 *
+	 * @return \DateTime
+	 */
+	public function getLastUpdate()
+	{
+		return $this->lastUpdate;
+	}
+
+	/**
+	 * Indicate if data needs update
+	 *
+	 * @return boolean
+	 */
+	public function needUpdate()
+	{
+		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 1 * 60);
 	}
 
 }
