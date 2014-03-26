@@ -71,13 +71,14 @@ class Service
 	/**
 	 * Get all pools
 	 *
+	 * @param boolean $forceRefresh
 	 * @return Pool[]
 	 */
-	public function getAll()
+	public function getAll($forceRefresh = false)
 	{
 		$return = $this->container->get('doctrine')->getRepository('CryptoCurrenciesPoolsBundle:Pool')->findBy(array(), array('name' => 'ASC'));
 		foreach ($return as $pool) {
-			$this->refresh($pool);
+			$this->refresh($pool, $forceRefresh);
 		}
 		return $return;
 	}
@@ -90,12 +91,12 @@ class Service
 	 */
 	public function refresh(Pool $pool, $force = false)
 	{
-		$this->refreshPool($pool);
-		$this->refreshBlocks($pool);
-		$this->refreshNetwork($pool);
-		$this->refreshShares($pool);
-		$this->refreshUser($pool);
-		$this->refreshUserWorkers($pool);
+		$this->refreshPool($pool, $force);
+		$this->refreshBlocks($pool, $force);
+		$this->refreshNetwork($pool, $force);
+		$this->refreshShares($pool, $force);
+		$this->refreshUser($pool, $force);
+		$this->refreshUserWorkers($pool, $force);
 	}
 
 	/**

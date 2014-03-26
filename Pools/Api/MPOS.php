@@ -8,6 +8,9 @@ use kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool;
  */
 class MPOS implements Api
 {
+	const API_NONE = 1;
+	const API_HTTP = 2;
+	const API_HTML = 3;
 
 	/**
 	 * Call MPOS Api
@@ -56,6 +59,22 @@ class MPOS implements Api
 	}
 
 	/**
+	 * Get api method (HTTP with accessKey, HTML with login / password, or none)
+	 *
+	 * @param Pool $pool
+	 * @return int
+	 */
+	private function _getAPIMethod(Pool $pool)
+	{
+		if ($pool->getApi()->getAccessKey() != null) {
+			return self::API_HTTP;
+		} else if ($pool->getApi()->getLogin() != null && $pool->getApi()->getPassword() != null) {
+			return self::API_HTML;
+		}
+		return self::API_NONE;
+	}
+
+	/**
 	 * Refresh blocks data
 	 *
 	 * @param Pool $pool
@@ -92,6 +111,10 @@ class MPOS implements Api
 	 */
 	public function refreshUser(Pool $pool)
 	{
+		if ($this->_getAPIMethod($pool) == self::API_NONE) {
+			return null;
+		}
+
 		$user = $pool->getUser();
 
 		$call = $this->_call($pool, 'getuserstatus');
@@ -99,6 +122,11 @@ class MPOS implements Api
 			return $call['errors'];
 		}
 		$data = $call['data'];
+
+		// action not implemented
+		if (is_integer($data) && $data == 501) {
+			return null;
+		}
 
 		if ($this->_isV1($data, 'getuserstatus')) {
 			$finalData = $data['getuserstatus']['data'];

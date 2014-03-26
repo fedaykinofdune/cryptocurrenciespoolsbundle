@@ -37,49 +37,44 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool:
             mappedBy: pool
             fetch: EAGER
             
+    manyToOne:
+        currency:
+            targetEntity: kujaff\CryptoCurrenciesBundle\Entity\Currency
+            joinColumn:
+                nullable: false
+            fetch: EAGER
+            
     oneToOne:
         api:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Api
             fetch: EAGER
-            joinColumn:
-                nullable: false
             cascade:
                 - persist
                 
         blocks:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Blocks
             fetch: EAGER
-            joinColumn:
-                nullable: false
             cascade:
                 - persist
                 
         network:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Network
             fetch: EAGER
-            joinColumn:
-                nullable: false
             cascade:
                 - persist
                 
         shares:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Shares
             fetch: EAGER
-            joinColumn:
-                nullable: false
             cascade:
                 - persist
                 
         user:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\User
             fetch: EAGER
-            joinColumn:
-                nullable: false
             cascade:
                 - persist
                 
-        currency:
-            targetEntity: kujaff\CryptoCurrenciesBundle\Entity\Currency
-            fetch: EAGER
+        
             
     lifecycleCallbacks: {  }
