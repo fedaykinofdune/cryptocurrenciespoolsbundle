@@ -545,4 +545,14 @@ class Pool
 		$this->refreshErrors = array();
 	}
 
+	/**
+	 * Count refresh errors
+	 *
+	 * @return int
+	 */
+	public function countRefreshErrors()
+	{
+		return count($this->refreshErrors);
+	}
+
 }
