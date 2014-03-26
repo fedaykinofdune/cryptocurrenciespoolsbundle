@@ -24,9 +24,17 @@ class Service
 	{
 		$class = '\kujaff\CryptoCurrenciesPoolsBundle\Pools\Api\\';
 		switch ($pool->getApi()->getKind()) {
+			// mpos
 			case Api::KIND_MPOS :
 				$class .= 'MPOS';
 				break;
+
+			// mmcFE
+			case Api::KIND_MMCFE :
+				$class .= 'mmcFE';
+				break;
+
+			// unknow
 			default:
 				throw new \Exception('Unknow api kind "' . $pool->getApi()->getKind() . '".');
 		}
@@ -152,6 +160,19 @@ class Service
 	public function refreshUser(Pool $pool, $force = false)
 	{
 		if ($force || $pool->getUser()->needUpdate()) {
+			$pool->cleanRefreshErrors();
+			$user = $pool->getUser();
+			$user->setBalanceConfirmed(null);
+			$user->setBalanceOrphaned(null);
+			$user->setBalanceUnconfirmed(null);
+			$user->setDonate(null);
+			$user->setHashrate(null);
+			$user->setInvalidShares(null);
+			$user->setIsAnonymous(null);
+			$user->setLastUpdate(new \DateTime());
+			$user->setShareRate(null);
+			$user->setValidShares(null);
+
 			$this->_getAPI($pool)->refreshUser($pool);
 			$this->_save();
 		}

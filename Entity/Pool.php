@@ -92,6 +92,11 @@ class Pool
 	private $currency;
 
 	/**
+	 * @var array
+	 */
+	private $refreshErrors = array();
+
+	/**
 	 * Constructor
 	 */
 	public function __construct()
@@ -508,6 +513,36 @@ class Pool
 	public function getCurrency()
 	{
 		return $this->currency;
+	}
+
+	/**
+	 * Add a refresh error message
+	 *
+	 * @param string $id
+	 * @param string $message
+	 */
+	public function addRefreshError($id, $message)
+	{
+		$this->refreshErrors[$id] = $message;
+		return $this;
+	}
+
+	/**
+	 * Get refresh errors
+	 *
+	 * @return array
+	 */
+	public function getRefreshErrors()
+	{
+		return $this->refreshErrors;
+	}
+
+	/**
+	 * Clean refresh errors
+	 */
+	public function cleanRefreshErrors()
+	{
+		$this->refreshErrors = array();
 	}
 
 }

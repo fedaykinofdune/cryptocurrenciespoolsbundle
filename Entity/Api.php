@@ -7,6 +7,7 @@ namespace kujaff\CryptoCurrenciesPoolsBundle\Entity;
 class Api
 {
 	const KIND_MPOS = 1;
+	const KIND_MMCFE = 2;
 	/**
 	 * @var integer
 	 */

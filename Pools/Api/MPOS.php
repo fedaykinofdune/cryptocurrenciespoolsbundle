@@ -31,15 +31,17 @@ class MPOS implements Api
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$json = curl_exec($ch);
 
-		$return = array(
-			'data' => json_decode($json, true),
-			'errors' => array()
-		);
+		$return = json_decode($json, true);
 
 		if ($json == 'Access denied') {
-			$return['errors'][] = 'Vérifiez votre clef d\'API.';
+			$pool->addRefreshError('accessKey', 'Vérifiez votre clef d\'API.');
+			$return = false;
 		} else if ($json == '400 Bad Request') {
-			$return['errors'][] = 'Action "' . $action . '" non reconnue.';
+			$pool->addRefreshError('badRequest', 'Requête d\'appel à l\'API mal formée.');
+			$return = false;
+		} else if ($json == 501) {
+			$pool->addRefreshError('unknowAction', 'L\'action "' . $action . '" n\'existe pas.');
+			$return = false;
 		}
 
 		curl_close($ch);
@@ -55,7 +57,7 @@ class MPOS implements Api
 	 */
 	private function _isV1($data, $action)
 	{
-		return (array_key_exists($action, $data) && array_key_exists('version', $data[$action]) && $data[$action]['version'] == '1.0.0');
+		return (is_array($data) && array_key_exists($action, $data) && array_key_exists('version', $data[$action]) && $data[$action]['version'] == '1.0.0');
 	}
 
 	/**
@@ -111,21 +113,15 @@ class MPOS implements Api
 	 */
 	public function refreshUser(Pool $pool)
 	{
-		if ($this->_getAPIMethod($pool) == self::API_NONE) {
+		$apiMethod = $this->_getAPIMethod($pool);
+		if ($apiMethod != self::API_HTTP) {
 			return null;
 		}
-
 		$user = $pool->getUser();
 
-		$call = $this->_call($pool, 'getuserstatus');
-		if (count($call['errors']) > 0) {
-			return $call['errors'];
-		}
-		$data = $call['data'];
-
-		// action not implemented
-		if (is_integer($data) && $data == 501) {
-			return null;
+		$data = $this->_call($pool, 'getuserstatus');
+		if ($data === false) {
+			return false;
 		}
 
 		if ($this->_isV1($data, 'getuserstatus')) {
@@ -135,14 +131,13 @@ class MPOS implements Api
 			$user->setValidShares($finalData['shares']['valid']);
 			$user->setInvalidShares($finalData['shares']['invalid']);
 
-			$call = $this->_call($pool, 'getuserbalance');
-			if (count($call['errors']) > 0) {
-				return $call['errors'];
+			$dataBalance = $this->_call($pool, 'getuserbalance');
+			if ($dataBalance === false) {
+				return false;
 			}
-			$data = $call['data'];
 
-			if ($this->_isV1($data, 'getuserbalance')) {
-				$finalData = $data['getuserbalance']['data'];
+			if ($this->_isV1($dataBalance, 'getuserbalance')) {
+				$finalData = $dataBalance['getuserbalance']['data'];
 				$user->setBalanceConfirmed($finalData['confirmed']);
 				$user->setBalanceUnconfirmed($finalData['unconfirmed']);
 				$user->setBalanceOrphaned($finalData['orphaned']);
@@ -153,8 +148,6 @@ class MPOS implements Api
 			$user->setShareRate($finalData['sharerate']);
 			$user->setBalanceConfirmed($finalData['balance']);
 		}
-
-		$user->setLastUpdate(new \DateTime());
 	}
 
 	/**
