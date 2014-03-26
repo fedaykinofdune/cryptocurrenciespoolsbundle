@@ -77,7 +77,7 @@ class Service
 	{
 		$return = $this->container->get('doctrine')->getRepository('CryptoCurrenciesPoolsBundle:Pool')->findBy(array(), array('name' => 'ASC'));
 		foreach ($return as $pool) {
-			//$this->refresh($pool);
+			$this->refresh($pool);
 		}
 		return $return;
 	}

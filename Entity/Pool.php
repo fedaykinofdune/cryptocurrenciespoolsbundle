@@ -2,6 +2,7 @@
 namespace kujaff\CryptoCurrenciesPoolsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use kujaff\CryptoCurrenciesBundle\Entity\Currency;
 
 /**
  * Pool
@@ -77,6 +78,18 @@ class Pool
 	 * @var \DateTime
 	 */
 	private $lastUpdate;
+
+	/**
+	 * Indicate is pool is used by a miner
+	 *
+	 * @var boolean
+	 */
+	private $used;
+
+	/**
+	 * @var Currency
+	 */
+	private $currency;
 
 	/**
 	 * Constructor
@@ -446,6 +459,42 @@ class Pool
 	public function needUpdate()
 	{
 		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 1 * 60);
+	}
+
+	/**
+	 * Indicate if pool is used by a miner
+	 *
+	 * @param boolean $refresh
+	 * @return boolean
+	 */
+	public function getUsed($refresh = false)
+	{
+		if ($refresh || $this->used === null) {
+			$this->Used = false;
+		}
+		return $this->used;
+	}
+
+	/**
+	 * Define currency
+	 *
+	 * @param Currency $currency
+	 * @return Pool
+	 */
+	public function setCurrency(Currency $currency)
+	{
+		$this->currency = $currency;
+		return $this;
+	}
+
+	/**
+	 * Get currency
+	 *
+	 * @return Currency
+	 */
+	public function getCurrency()
+	{
+		return $this->currency;
 	}
 
 }

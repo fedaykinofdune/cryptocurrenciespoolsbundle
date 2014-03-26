@@ -53,6 +53,8 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\User:
         pool:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
             fetch: EAGER
+            joinColumn:
+                nullable: false
             cascade:
                 - persist
             

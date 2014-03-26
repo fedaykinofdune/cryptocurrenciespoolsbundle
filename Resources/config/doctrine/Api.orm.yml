@@ -29,5 +29,7 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Api:
         pool:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
             fetch: EAGER
+            joinColumn:
+                nullable: false
 
     lifecycleCallbacks: {  }

@@ -44,5 +44,7 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Network:
         pool:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool
             fetch: EAGER
+            joinColumn:
+                nullable: false
                 
     lifecycleCallbacks: {  }

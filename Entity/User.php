@@ -69,6 +69,13 @@ class User
 	private $workers;
 
 	/**
+	 * Indiciate if workers has been retrieved, or if we cannot retrieve infos
+	 *
+	 * @var boolean
+	 */
+	private $workersRetrieved = false;
+
+	/**
 	 * @var \DateTime
 	 */
 	private $lastUpdate;
@@ -349,7 +356,7 @@ class User
 	 */
 	public function countWorkers()
 	{
-		return count($this->getWorkers());
+		return ($this->getWorkersRetrieved()) ? count($this->getWorkers()) : null;
 	}
 
 	/**
@@ -359,6 +366,9 @@ class User
 	 */
 	public function countEnabledWorkers()
 	{
+		if ($this->getWorkersRetrieved() == false) {
+			return null;
+		}
 		$return = 0;
 		foreach ($this->getWorkers() as $worker) {
 			if ($worker->getEnabled()) {
@@ -366,6 +376,28 @@ class User
 			}
 		}
 		return $return;
+	}
+
+	/**
+	 * Set workers retrieved
+	 *
+	 * @param boolean $retrieved
+	 * @return User
+	 */
+	public function setWorkersRetrieved($retrieved)
+	{
+		$this->workersRetrieved = $retrieved;
+		return $this;
+	}
+
+	/**
+	 * Get workers retrieved
+	 *
+	 * @return boolean
+	 */
+	public function getWorkersRetrieved()
+	{
+		return $this->workersRetrieved;
 	}
 
 	/**
