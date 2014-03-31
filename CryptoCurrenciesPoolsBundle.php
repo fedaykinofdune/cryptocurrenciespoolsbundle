@@ -9,7 +9,7 @@ class CryptoCurrenciesPoolsBundle extends VersionnedBundle
 
 	public function __construct()
 	{
-		$this->version = new Version('0.0.1');
+		$this->version = new Version('0.0.2');
 	}
 
 }

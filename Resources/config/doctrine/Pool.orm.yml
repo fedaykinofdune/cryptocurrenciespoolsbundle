@@ -33,12 +33,17 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\Pool:
         refreshErrors:
             type: json_array
             nullable: true
+        refreshEnabled:
+            type: boolean
+            default: true
             
     oneToMany:
         servers:
             targetEntity: kujaff\CryptoCurrenciesPoolsBundle\Entity\Server
             mappedBy: pool
             fetch: EAGER
+            cascade:
+                - persist
             
     manyToOne:
         currency:

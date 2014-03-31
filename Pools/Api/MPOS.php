@@ -17,9 +17,10 @@ class MPOS implements Api
 	 *
 	 * @param Pool $pool
 	 * @param string $action
+	 * @param stdClass $addErrors Objet where errors will be added
 	 * @return array
 	 */
-	private function _call(Pool $pool, $action)
+	private function _call(Pool $pool, $action, $addErrors)
 	{
 		$params = array(
 			'page' => 'api',
@@ -33,14 +34,17 @@ class MPOS implements Api
 
 		$return = json_decode($json, true);
 
-		if ($json == 'Access denied') {
-			$pool->addRefreshError('accessKey', 'Vérifiez votre clef d\'API.');
+		if ($return == null) {
+			$addErrors->addRefreshError('invalidReturn', 'Retour invalide de l\'api.');
+			$return = false;
+		} else if ($json == 'Access denied') {
+			$addErrors->addRefreshError('accessKey', 'Vérifiez votre clef d\'API.');
 			$return = false;
 		} else if ($json == '400 Bad Request') {
-			$pool->addRefreshError('badRequest', 'Requête d\'appel à l\'API mal formée.');
+			$addErrors->addRefreshError('badRequest', 'Requête d\'appel à l\'API mal formée.');
 			$return = false;
 		} else if ($json == 501) {
-			$pool->addRefreshError('unknowAction', 'L\'action "' . $action . '" n\'existe pas.');
+			$addErrors->addRefreshError('unknowAction', 'L\'action "' . $action . '" n\'existe pas.');
 			$return = false;
 		}
 
@@ -119,7 +123,7 @@ class MPOS implements Api
 		}
 		$user = $pool->getUser();
 
-		$data = $this->_call($pool, 'getuserstatus');
+		$data = $this->_call($pool, 'getuserstatus', $pool->getUser());
 		if ($data === false) {
 			return false;
 		}
@@ -131,7 +135,7 @@ class MPOS implements Api
 			$user->setValidShares($finalData['shares']['valid']);
 			$user->setInvalidShares($finalData['shares']['invalid']);
 
-			$dataBalance = $this->_call($pool, 'getuserbalance');
+			$dataBalance = $this->_call($pool, 'getuserbalance', $pool->getUser());
 			if ($dataBalance === false) {
 				return false;
 			}

@@ -62,6 +62,11 @@ class Network
 	private $lastUpdate;
 
 	/**
+	 * @var array
+	 */
+	private $refreshErrors = array();
+
+	/**
 	 * Get id
 	 *
 	 * @return integer
@@ -298,6 +303,46 @@ class Network
 	}
 
 	/**
+	 * Add a refresh error message
+	 *
+	 * @param string $id
+	 * @param string $message
+	 */
+	public function addRefreshError($id, $message)
+	{
+		$this->refreshErrors[$id] = $message;
+		return $this;
+	}
+
+	/**
+	 * Get refresh errors
+	 *
+	 * @return array
+	 */
+	public function getRefreshErrors()
+	{
+		return $this->refreshErrors;
+	}
+
+	/**
+	 * Clean refresh errors
+	 */
+	public function cleanRefreshErrors()
+	{
+		$this->refreshErrors = array();
+	}
+
+	/**
+	 * Count refresh errors
+	 *
+	 * @return int
+	 */
+	public function countRefreshErrors()
+	{
+		return count($this->refreshErrors);
+	}
+
+	/**
 	 * Indicate if data needs update
 	 *
 	 * @return boolean
@@ -305,6 +350,14 @@ class Network
 	public function needUpdate()
 	{
 		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 5 * 60);
+	}
+
+	/**
+	 * Clean data
+	 */
+	public function clean()
+	{
+
 	}
 
 }

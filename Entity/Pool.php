@@ -97,6 +97,11 @@ class Pool
 	private $refreshErrors = array();
 
 	/**
+	 * @var boolean
+	 */
+	private $refreshEnabled;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct()
@@ -553,6 +558,52 @@ class Pool
 	public function countRefreshErrors()
 	{
 		return count($this->refreshErrors);
+	}
+
+	/**
+	 * Get all refresh errors
+	 *
+	 * @return array
+	 */
+	public function getAllRefreshErrors()
+	{
+		$return = $this->getRefreshErrors();
+		$return = array_merge($return, $this->getBlocks()->getRefreshErrors());
+		$return = array_merge($return, $this->getNetwork()->getRefreshErrors());
+		$return = array_merge($return, $this->getShares()->getRefreshErrors());
+		$return = array_merge($return, $this->getUser()->getRefreshErrors());
+		foreach ($this->getUser()->getWorkers()->toArray() as $worker) {
+			$return = array_merge($return, $worker->getRefreshErrors());
+		}
+		return $return;
+	}
+
+	/**
+	 * Set refresh enabled
+	 *
+	 * @param boolean $enabled
+	 */
+	public function setRefreshEnabled($enabled)
+	{
+		$this->refreshEnabled = (bool) $enabled;
+	}
+
+	/**
+	 * Get refresh enabled
+	 *
+	 * @return boolean
+	 */
+	public function getRefreshEnabled()
+	{
+		return $this->refreshEnabled;
+	}
+
+	/**
+	 * Clean data
+	 */
+	public function clean()
+	{
+
 	}
 
 }

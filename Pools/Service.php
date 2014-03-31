@@ -159,19 +159,11 @@ class Service
 	 */
 	public function refreshUser(Pool $pool, $force = false)
 	{
-		if ($force || $pool->getUser()->needUpdate()) {
-			$pool->cleanRefreshErrors();
+		if ($pool->getRefreshEnabled() && ($force || $pool->getUser()->needUpdate())) {
 			$user = $pool->getUser();
-			$user->setBalanceConfirmed(null);
-			$user->setBalanceOrphaned(null);
-			$user->setBalanceUnconfirmed(null);
-			$user->setDonate(null);
-			$user->setHashrate(null);
-			$user->setInvalidShares(null);
-			$user->setIsAnonymous(null);
+			$user->cleanRefreshErrors();
+			$user->clean();
 			$user->setLastUpdate(new \DateTime());
-			$user->setShareRate(null);
-			$user->setValidShares(null);
 
 			$this->_getAPI($pool)->refreshUser($pool);
 			$this->_save();

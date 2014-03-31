@@ -37,6 +37,11 @@ class Shares
 	private $lastUpdate;
 
 	/**
+	 * @var array
+	 */
+	private $refreshErrors = array();
+
+	/**
 	 * Get id
 	 *
 	 * @return integer
@@ -158,6 +163,46 @@ class Shares
 	}
 
 	/**
+	 * Add a refresh error message
+	 *
+	 * @param string $id
+	 * @param string $message
+	 */
+	public function addRefreshError($id, $message)
+	{
+		$this->refreshErrors[$id] = $message;
+		return $this;
+	}
+
+	/**
+	 * Get refresh errors
+	 *
+	 * @return array
+	 */
+	public function getRefreshErrors()
+	{
+		return $this->refreshErrors;
+	}
+
+	/**
+	 * Clean refresh errors
+	 */
+	public function cleanRefreshErrors()
+	{
+		$this->refreshErrors = array();
+	}
+
+	/**
+	 * Count refresh errors
+	 *
+	 * @return int
+	 */
+	public function countRefreshErrors()
+	{
+		return count($this->refreshErrors);
+	}
+
+	/**
 	 * Indicate if data needs update
 	 *
 	 * @return boolean
@@ -165,6 +210,14 @@ class Shares
 	public function needUpdate()
 	{
 		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 1 * 60);
+	}
+
+	/**
+	 * Clean data
+	 */
+	public function clean()
+	{
+
 	}
 
 }

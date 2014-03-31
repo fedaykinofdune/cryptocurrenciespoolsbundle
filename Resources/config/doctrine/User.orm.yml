@@ -48,6 +48,9 @@ kujaff\CryptoCurrenciesPoolsBundle\Entity\User:
         lastUpdate:
             type: datetime
             nullable: true
+        refreshErrors:
+            type: json_array
+            nullable: true
 
     oneToOne:
         pool:

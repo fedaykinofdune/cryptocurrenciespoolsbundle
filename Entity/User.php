@@ -81,6 +81,11 @@ class User
 	private $lastUpdate;
 
 	/**
+	 * @var array
+	 */
+	private $refreshErrors = array();
+
+	/**
 	 * Constructor
 	 */
 	public function __construct()
@@ -431,6 +436,46 @@ class User
 	}
 
 	/**
+	 * Add a refresh error message
+	 *
+	 * @param string $id
+	 * @param string $message
+	 */
+	public function addRefreshError($id, $message)
+	{
+		$this->refreshErrors[$id] = $message;
+		return $this;
+	}
+
+	/**
+	 * Get refresh errors
+	 *
+	 * @return array
+	 */
+	public function getRefreshErrors()
+	{
+		return $this->refreshErrors;
+	}
+
+	/**
+	 * Clean refresh errors
+	 */
+	public function cleanRefreshErrors()
+	{
+		$this->refreshErrors = array();
+	}
+
+	/**
+	 * Count refresh errors
+	 *
+	 * @return int
+	 */
+	public function countRefreshErrors()
+	{
+		return count($this->refreshErrors);
+	}
+
+	/**
 	 * Indicate if data needs update
 	 *
 	 * @return boolean
@@ -438,6 +483,23 @@ class User
 	public function needUpdate()
 	{
 		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 1 * 60);
+	}
+
+	/**
+	 * Clean data
+	 */
+	public function clean()
+	{
+		$this->setBalanceConfirmed(null);
+		$this->setBalanceOrphaned(null);
+		$this->setBalanceUnconfirmed(null);
+		$this->setDonate(null);
+		$this->setHashrate(null);
+		$this->setInvalidShares(null);
+		$this->setIsAnonymous(null);
+		$this->setShareRate(null);
+		$this->setValidShares(null);
+		$this->setLastUpdate(null);
 	}
 
 }
