@@ -96,11 +96,14 @@ class Installer extends EasyInstaller implements Install, Update, Uninstall
 	public function update_0_0_2()
 	{
 		$this->_executeSQL('ALTER TABLE pools ADD refreshEnabled TINYINT(1) DEFAULT 1 NOT NULL;');
+		$this->_executeSQL('ALTER TABLE pools ADD refreshErrors LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json_array)\', CHANGE refreshEnabled refreshEnabled TINYINT(1) NOT NULL;');
 		$this->_executeSQL('ALTER TABLE pools_shares ADD refreshErrors LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json_array)\';');
 		$this->_executeSQL('ALTER TABLE pools_network ADD refreshErrors LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json_array)\';');
 		$this->_executeSQL('ALTER TABLE pools_blocks ADD refreshErrors LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json_array)\';');
 		$this->_executeSQL('ALTER TABLE pools_users ADD refreshErrors LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json_array)\';');
+		$this->_executeSQL('ALTER TABLE pools_users CHANGE pool_id pool_id INT NOT NULL;');
 		$this->_executeSQL('ALTER TABLE pools_users_workers ADD refreshErrors LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json_array)\';');
+		$this->_executeSQL('ALTER TABLE pools_users_workers ADD lastUpdate DATETIME DEFAULT NULL;');
 	}
 
 }
