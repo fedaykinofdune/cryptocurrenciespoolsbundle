@@ -80,13 +80,6 @@ class Pool
 	private $lastUpdate;
 
 	/**
-	 * Indicate is pool is used by a miner
-	 *
-	 * @var boolean
-	 */
-	private $used;
-
-	/**
 	 * @var Currency
 	 */
 	private $currency;
@@ -469,33 +462,6 @@ class Pool
 	public function needUpdate()
 	{
 		return ($this->getLastUpdate() == null || time() - $this->getLastUpdate()->format('U') > 1 * 60);
-	}
-
-	/**
-	 * Indicate if pool is used by a miner
-	 *
-	 * @param boolean $refresh
-	 * @return boolean
-	 */
-	public function getUsed($refresh = false)
-	{
-		if ($refresh || $this->used === null) {
-			$this->used = false;
-			$rigs = _service('rigs')->getAllFilled();
-			foreach ($rigs->getAll() as $rig) {
-				foreach ($rig->getMiners()->toArray() as $miner) {
-					if ($miner->getActivePool() != null) {
-						foreach ($this->getServers() as $server) {
-							if ($miner->getActivePool()->getURL() == $server->getAddress() . ':' . $server->getPort()) {
-								$this->used = true;
-								break 3;
-							}
-						}
-					}
-				}
-			}
-		}
-		return $this->used;
 	}
 
 	/**

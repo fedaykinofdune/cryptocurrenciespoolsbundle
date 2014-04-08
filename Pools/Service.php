@@ -63,16 +63,17 @@ class Service
 	 * Get a pool
 	 *
 	 * @param int $id
+	 * @param boolean $forceRefresh
 	 * @return Pool
 	 * @throws \Exception
 	 */
-	public function get($id)
+	public function get($id, $forceRefresh = false)
 	{
 		$return = $this->container->get('doctrine')->getRepository('CryptoCurrenciesPoolsBundle:Pool')->findOneById($id);
 		if ($return == null) {
 			throw new \Exception('Pool "' . $id . '" not found.');
 		}
-		$this->refresh($return);
+		$this->refresh($return, $forceRefresh);
 		return $return;
 	}
 
