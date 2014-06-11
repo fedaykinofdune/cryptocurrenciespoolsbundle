@@ -1,5 +1,5 @@
 {
-    "name": "kujaff/cryptocurrenciespoolsbundle",
+    "name": "steevanb/cryptocurrenciespoolsbundle",
     "license": "MIT",
     "type": "bundle",
     "description": "Informations about crypto currencies pools (MPOS)",
